@@ -1,7 +1,5 @@
-import pytest
 from pytest_bdd import scenario, given, when, then
 import requests
-import json
 
 URL = "10.16.51.178:6584"
 resp = requests.get('http://' + URL + '/get_devices')
@@ -24,6 +22,21 @@ def test_request_instances():
 
 @then("The client should receive a list of instances")
 def test_check_instances():
+    data = resp.json()
+    i = 0
+    while i < len(data):
+        #this checks to make sure that the keys are correct and that they have the correct types
+        assert("deviceName" in data[i])
+        assert("versionNumber" in data[i])
+        assert("macAddress" in data[i])
+        assert("ipAddress" in data[i])
+        assert("lastBroadcast" in data[i])
+        assert(type(data[i]["deviceName"]) is str)
+        assert(type(data[i]["versionNumber"]) is str)
+        assert(type(data[i]["macAddress"]) is str)
+        assert(type(data[i]["ipAddress"]) is str)
+        assert(type(data[i]["lastBroadcast"]) is int)
+        i = i + 1
     assert (resp.status_code == 200)
 
 
