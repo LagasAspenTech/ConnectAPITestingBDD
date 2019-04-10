@@ -3,8 +3,8 @@ from pytest_bdd import scenario, given, when, then
 import requests
 import json
 
-global resp
 URL = "10.16.51.178:6584"
+resp = requests.get('http://' + URL + '/get_devices')
 
 
 @scenario('Connect.feature', 'Client requests a list of Aspen Connect instances (GET /get_devices)')
@@ -137,12 +137,12 @@ def test_valid_connect_delete_server():
     assert True
 
 
-@when("The client deletes a given server")
+@when('The client deletes a given server')
 def test_delete_server():
     resp = requests.post('http://' + URL + '/delete_server')
 
 
-@then("The server should be deleted")
+@then('The server should be deleted')
 def test_check_delete_server():
     assert (resp.status_code == 200)
 
@@ -152,17 +152,17 @@ def test_scenario_test_connection():
     assert True
 
 
-@given("The client is connected to a valid server instance")
+@given('The client is connected to a valid server instance')
 def test_valid_connect_test_connection():
     assert True
 
 
-@when("The client requests a list of devices")
+@when('The client requests a list of devices')
 def test_test_connection():
     resp = requests.post('http://' + URL + '/test_connection')
 
 
-@then("The client should receive a list of devices")
+@then('The client should receive a list of devices')
 def test_check_test():
     assert (resp.status_code == 200)
 
@@ -172,17 +172,17 @@ def test_scenario_get_available_tags():
     assert True
 
 
-@given("The client is connected to a valid server instance")
+@given('The client is connected to a valid server instance')
 def test_valid_connect_get_available_tags():
     assert True
 
 
-@when("The client requests a list of tags")
+@when('The client requests a list of tags')
 def test_get_available_tags():
     resp = requests.post('http://' + URL + '/get_available_tags')
 
 
-@then("The client should receive a list of tags")
+@then('The client should receive a list of tags')
 def test_check_available_tags():
     assert (resp.status_code == 200)
 
