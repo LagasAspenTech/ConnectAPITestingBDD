@@ -3,7 +3,7 @@ import requests
 from Steps.json_testing import jsontester
 
 URL = "10.16.51.178:6584"
-resp = requests.get('http://' + URL + '/get_devices')
+resp = requests.get('http://' + URL + '/get_devices') #this is not changed when the tests are run, not sure why
 
 
 @scenario('Connect.feature', 'Client requests a list of Aspen Connect instances (GET /get_devices)')
@@ -23,8 +23,8 @@ def test_request_instances():
 
 @then("The client should receive a list of instances")
 def test_check_instances():
-    resultdict = {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": int} #this contains the things that should be included in the json file and what their type should be
-    jsontester(resp, resultdict)
+    resultdict = {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": "num"} #this contains the things that should be included in the json file and what their type should be
+    jsontester(resp.json(), resultdict)
     assert (resp.status_code == 200)
 
 
@@ -45,6 +45,8 @@ def test_request_device_info():
 
 @then("The client should receive connected device data")
 def test_check_device_info():
+    resultdict = {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": "num"}
+    jsontester(resp.json(), resultdict)
     assert (resp.status_code == 200)
 
 
@@ -61,10 +63,13 @@ def test_valid_connect_get_device_stats():
 @when("The client requests connected device statistics")
 def test_request_device_stats():
     resp = requests.get('http://' + URL + '/get_device_stats')
+    print(resp.json())
 
 
 @then("The client should receive connected device statistics")
 def test_check_device_stats():
+    resultdict = {"cpuPercent": "num", "memPercent": "num", "diskPercent": "num"}
+    jsontester(resp.json(), resultdict)
     assert (resp.status_code == 200)
 
 
@@ -85,6 +90,7 @@ def test_request_device_schemas():
 
 @then("The client should receive connected device schemas")
 def test_check_device_schemas():
+    #not sure how to do the json check just yet so I'm putting it off til later
     assert (resp.status_code == 200)
 
 
@@ -105,6 +111,8 @@ def test_add_server():
 
 @then("A new server instance should be added")
 def test_check_server():
+    resultdict = {"serverKey": str}
+    jsontester(resp.json(), resultdict)
     assert (resp.status_code == 200)
 
 
