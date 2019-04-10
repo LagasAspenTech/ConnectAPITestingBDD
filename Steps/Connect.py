@@ -1,10 +1,10 @@
 from pytest_bdd import scenario, given, when, then
 import requests
-from Steps.json_testing import jsontester
+from Steps.json_testing import jsontester, respclass
 
 URL = "10.16.51.178:6584"
-resp = requests.get('http://' + URL + '/get_devices') #this is not changed when the tests are run, not sure why
-
+resp = requests.get('http://' + URL + '/get_devices')
+respholder = respclass(URL, resp)
 
 @scenario('Connect.feature', 'Client requests a list of Aspen Connect instances (GET /get_devices)')
 def test_scenario_get_devices():
@@ -18,13 +18,13 @@ def test_valid_connect_get_devices():
 
 @when("The client requests a list of instances")
 def test_request_instances():
-    resp = requests.get('http://' + URL + '/get_devices')
+    respholder.setResp('/get_devices')
 
 
 @then("The client should receive a list of instances")
 def test_check_instances():
     resultdict = {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": "num"} #this contains the things that should be included in the json file and what their type should be
-    jsontester(resp.json(), resultdict)
+    jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 200)
 
 
@@ -40,13 +40,13 @@ def test_valid_connect_get_device_info():
 
 @when("The client requests connected device data")
 def test_request_device_info():
-    resp = requests.get('http://' + URL + '/get_device_info')
+    respholder.setResp('/get_device_info')
 
 
 @then("The client should receive connected device data")
 def test_check_device_info():
     resultdict = {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": "num"}
-    jsontester(resp.json(), resultdict)
+    jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 200)
 
 
@@ -62,14 +62,14 @@ def test_valid_connect_get_device_stats():
 
 @when("The client requests connected device statistics")
 def test_request_device_stats():
-    resp = requests.get('http://' + URL + '/get_device_stats')
-    print(resp.json())
+    respholder.setResp('/get_device_stats')
+    print(respholder.getResp().json())
 
 
 @then("The client should receive connected device statistics")
 def test_check_device_stats():
     resultdict = {"cpuPercent": "num", "memPercent": "num", "diskPercent": "num"}
-    jsontester(resp.json(), resultdict)
+    jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 200)
 
 
