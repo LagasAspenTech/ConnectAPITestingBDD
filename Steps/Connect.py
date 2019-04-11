@@ -85,7 +85,7 @@ def test_valid_connect_get_schemas():
 
 @when("The client requests connected device schemas")
 def test_request_device_schemas():
-    resp = requests.get('http://' + URL + '/get_schemas')
+    respholder.setResp('/get_schemas')
 
 
 @then("The client should receive connected device schemas")
@@ -106,13 +106,15 @@ def test_valid_connect_add_server():
 
 @when("The client adds a server instance")
 def test_add_server():
-    resp = requests.post('http://' + URL + '/add_server')
+    respholder.setResp('/add_server')
 
 
 @then("A new server instance should be added")
 def test_check_server():
     resultdict = {"serverKey": str}
-    jsontester(resp.json(), resultdict)
+    #value = respholder.getResp().json()
+    #print(value)
+    jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 200)
 
 
@@ -128,7 +130,7 @@ def test_valid_connect_get_servers():
 
 @when("The client requests a list of servers")
 def test_get_servers():
-    resp = requests.get('http://' + URL + '/get_servers')
+    respholder.setResp('/get_servers')
 
 
 @then("The client should receive a list of servers")
@@ -148,7 +150,7 @@ def test_valid_connect_delete_server():
 
 @when('The client deletes a given server')
 def test_delete_server():
-    resp = requests.post('http://' + URL + '/delete_server')
+    respholder.setResp('/delete_server')
 
 
 @then('The server should be deleted')
@@ -168,7 +170,7 @@ def test_valid_connect_test_connection():
 
 @when('The client requests a list of devices')
 def test_test_connection():
-    resp = requests.post('http://' + URL + '/test_connection')
+    respholder.setResp('/test_connection')
 
 
 @then('The client should receive a list of devices')
@@ -188,7 +190,7 @@ def test_valid_connect_get_available_tags():
 
 @when('The client requests a list of tags')
 def test_get_available_tags():
-    resp = requests.post('http://' + URL + '/get_available_tags')
+    respholder.setResp('/get_available_tags')
 
 
 @then('The client should receive a list of tags')
@@ -208,7 +210,7 @@ def test_valid_connect_activate_tags():
 
 @when("The client saves a set of tags")
 def test_activate_tags():
-    resp = requests.post('http://' + URL + '/activate_tags')
+    respholder.setResp('/activate_tags')
 
 
 @then("The set of tags should be saved")
@@ -228,7 +230,7 @@ def test_valid_connect_create_tags():
 
 @when("The client creates a set of tags")
 def test_create_tags():
-    resp = requests.post('http://' + URL + '/create_tags')
+    respholder.setResp('/create_tags')
 
 
 @then("The tags should be created")
@@ -248,7 +250,7 @@ def test_valid_connect_delete_tags():
 
 @when("The client deletes a set of tags")
 def test_delete_tags():
-    resp = requests.post('http://' + URL + '/delete_tags')
+    respholder.setResp('/delete_tags')
 
 
 @then("The set of tags should be deleted")
@@ -268,7 +270,7 @@ def test_valid_connect_create_route():
 
 @when("The client creates a route")
 def test_create_route():
-    resp = requests.post('http://' + URL + '/create_route')
+    respholder.setResp('/create_route')
 
 
 @then("The route should be created")
@@ -288,7 +290,7 @@ def test_valid_connect_get_routes():
 
 @when('The client requests a list of routes')
 def test_get_routes():
-    resp = requests.post('http://' + URL + '/get_routes')
+    respholder.setResp('/get_routes')
 
 
 @then('The client should receive a list of routes')
@@ -308,7 +310,7 @@ def test_valid_connect_delete_route():
 
 @when('The client deletes a given route')
 def test_delete_route():
-    resp = requests.post('http://' + URL + '/delete_route')
+    respholder.setResp('/delete_route')
 
 
 @then('The route should be deleted')
@@ -328,7 +330,7 @@ def test_valid_connect_create_derived_tags():
 
 @when('The client creates a set of derived tags')
 def test_create_derived_tags():
-    resp = requests.post('http://' + URL + '/create_derived_tags')
+    respholder.setResp('/create_derived_tags')
 
 
 @then('The set of derived tags should be created')
@@ -348,7 +350,7 @@ def test_valid_connect_delete_derived_tags():
 
 @when("The client deletes a set of derived tags")
 def test_delete_derived_tags():
-    resp = requests.post('http://' + URL + '/delete_derived_tags')
+    respholder.setResp('/delete_derived_tags')
 
 
 @then("The set of derived tags should be deleted")
@@ -368,7 +370,7 @@ def test_valid_connect_activate_device():
 
 @when("The client activates a device")
 def test_activated_device():
-    resp = requests.post('http://' + URL + '/activate_device')
+    respholder.setResp('/activate_device')
 
 
 @then("The device should be activated")

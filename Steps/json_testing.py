@@ -5,6 +5,8 @@ def jsontester(data, resultdict):
     #for example, {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": int}
     print(data) #this is for debug purposes
     i = 0
+    if (isinstance(data, list) is False):
+        data = [data]
     while i < len(data):
         # this checks to make sure that the keys are correct and that they have the correct types
         for item in resultdict:
