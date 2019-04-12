@@ -17,14 +17,19 @@ def jsontester(data, resultdict):
                 assert (type(data[i][item]) is resultdict[item])
         i = i + 1
 
+
 class respclass:
     def __init__(self, URL, RESP):
         self.url = URL
         self.resp = RESP
     def getResp(self):
         return self.resp
-    def setResp(self, type):
-        self.resp = requests.get('http://' + self.url + type)
+    def setResp(self, type, param=None, post=None):
+        if param is None and post is None:
+            self.resp = requests.get('http://' + self.url + type)
+        elif param is not None and post is not None:
+            self.resp = requests.post('http://' + self.url + type, params=param, data=post)
+            #print(self.resp.json())
     def setURL(self, URL):
         self.url = URL
     def getURL(self):

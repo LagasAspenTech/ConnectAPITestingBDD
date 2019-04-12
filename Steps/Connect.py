@@ -105,15 +105,17 @@ def test_valid_connect_add_server():
     assert True
 
 
-@when("The client adds a server instance")
-def test_add_server():
-    respholder.setResp('/add_server')#add server is bugged, needs to have an input
+@when('The client adds a server instance with server key <servkey> and post values <post_values>')
+def test_add_server(servkey, post_values):
+    params = {'serverKey':servkey}
+    respholder.setResp('/add_server', param=params, post=post_values)
 
 
-@then("A new server instance should be added")
-def test_check_server():
+@then("A new server instance should be added with output <output_json>")
+def test_check_server(output_json):
     resultdict = {"token": str, "objectId": int, "status": str, "request": str}
     jsontester(respholder.getResp().json(), resultdict)
+    assert (output_json == respholder.getResp().json())
     assert (resp.status_code == 201)
 
 
@@ -173,6 +175,8 @@ def test_valid_connect_test_connection():
 @when('The client requests a list of devices')
 def test_test_connection():
     respholder.setResp('/test_connection') #needs input params for server key and so on
+
+
 
 
 @then('The client should receive a list of devices')

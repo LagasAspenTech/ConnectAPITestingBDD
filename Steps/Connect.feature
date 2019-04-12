@@ -21,10 +21,15 @@ Feature: Connect APIs
     When: The client requests connected device schemas
     Then: The client should receive connected device schemas
 
-  Scenario: Client creates an instance of a protocol plugin as a standalone server (POST /add_server)
+  Scenario Outline: Client creates an instance of a protocol plugin as a standalone server (POST /add_server)
     Given: The client is connected to a valid server instance
-    When: The client adds a server instance
-    Then: A new server instance should be added
+    When: The client adds a server instance with server key <servkey> and post values <post_values>
+    Then: A new server instance should be added with output <output_json>
+    Examples:
+    | servkey | post_values|output_json|
+    |sim.io   |{'id': 0, 'name': 'Test Simulator 2', 'seed': 10, 'logdirectory': "./"}|{"token": "3e1b7fd6-964e-4b33-aedc-799771e11799","objectId": 2, (>0)"status": "request completed","request": "Add Server","err": null}|
+    |mqtt.io   |{"id":0,"name":"MQTT","url":"aspenmqtt.eastus.cloudapp.azure.com","port":1883,"username":"aspenmqtt","password":"AspenTech*99","tls":false,"auth":true,"rootTopic":"test_stream/+","format":"json","dateFormat":"yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags":true}|{"token": "3e1b7fd6-964e-4b33-aedc-799771e11799","objectId": 3,"status": "request completed","request": "Add Server","err": null}
+
 
   Scenario: Client requests a list of all configured, connected servers (GET /get_servers)
     Given: The client is connected to a valid server instance
