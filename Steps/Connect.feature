@@ -32,10 +32,14 @@ Feature: Connect APIs
     |mqtt.io|{"id":0,"name":"MQTT","url":"aspenmqtt.eastus.cloudapp.azure.com","port":1883,"username":"aspenmqtt","password":"AspenTech*99","tls":false,"auth":true,"rootTopic":"test_stream/+","format":"json","dateFormat":"yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags":true}|{"token": "3e1b7fd6-964e-4b33-aedc-799771e11799","objectId": 3,"status": "request completed","request": "Add Server","err": null}|
 
 
-  Scenario: Client requests a list of all configured, connected servers (GET /get_servers)
-    Given: The client is connected to a valid server instance
-    When: The client requests a list of servers
-    Then: The client should receive a list of servers
+  Scenario Outline: Client requests a list of all configured, connected servers (GET /get_servers)
+    Given The client is connected to a valid server instance
+    When The client requests a list of servers
+    Then The client should receive a list of servers with output <output_json_1> and <output_json_2>
+
+    Examples:
+    |output_json_1|output_json_2|
+    |{"key": "mqtt.io","id": 3,"name": "MQTT","url": "aspenmqtt.eastus.cloudapp.azure.com","port": 1883,"username": "aspenmqtt","password": "AspenTech*99","tls": false,"auth": true,"rootTopic": "test_stream/+","format": "JSON","dateFormat": "yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags": true}|{"key": "sim.io","id": 2,"name": "sim","logdirectory": "./results/sim.io.001/","maxreadcount": 100000,"datafrequencysecs": 1}|
 
   Scenario: Client deletes a given server (POST /delete_server)
     Given: The client is connected to a valid server instance

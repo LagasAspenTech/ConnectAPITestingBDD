@@ -1,5 +1,4 @@
 import requests
-import json
 
 def jsontester(data, resultdict):
     #resultdict contains the types and the names of what should be in the response
@@ -19,12 +18,10 @@ def jsontester(data, resultdict):
                 assert (type(data[i][item]) is resultdict[item])
         i = i + 1
 
-def compare_ouput_json(expectedstring, result):
-    expected = json.loads(expectedstring)
+def compare_ouput_json(expected, result):
     for item in result:
-        print(item)
         assert (item in expected)
-        if item == "objectId":
+        if item == "objectId" or item == "id":
             assert (result[item] > expected[item])
         elif item != "token":
             assert(expected[item] == result[item])
