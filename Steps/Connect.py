@@ -1,6 +1,6 @@
 from pytest_bdd import scenario, given, when, then
 import requests
-from Steps.json_testing import jsontester, respclass
+from Steps.json_testing import jsontester, respclass, compare_ouput_json
 
 URL = "10.16.51.178:6584"
 resp = requests.get('http://' + URL + '/get_devices')
@@ -95,8 +95,8 @@ def test_check_device_schemas():
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', 'Client creates an instance of a protocol plugin as a standalone server (POST /add_server)')
-def test_scenario_add_server():
+@scenario('Connect.feature', 'Client creates an instance of a protocol plugin as a standalone server (POST /add_server)',example_converters=dict(serv_key=str, post_values=str, output_json=str))
+def test_scenario_add_server(serv_key, post_values, output_json):
     assert True
 
 
@@ -105,18 +105,17 @@ def test_valid_connect_add_server():
     assert True
 
 
-@when('The client adds a server instance with server key <servkey> and post values <post_values>')
-def test_add_server(servkey, post_values):
-    params = {'serverKey':servkey}
+@when('The client adds a server instance with server key <serv_key> and post values <post_values>')
+def test_add_server(serv_key, post_values):
+    params = {'serverKey':serv_key}
     respholder.setResp('/add_server', param=params, post=post_values)
 
 
 @then("A new server instance should be added with output <output_json>")
 def test_check_server(output_json):
-    resultdict = {"token": str, "objectId": int, "status": str, "request": str}
-    jsontester(respholder.getResp().json(), resultdict)
-    assert (output_json == respholder.getResp().json())
-    assert (resp.status_code == 201)
+    print(respholder.getResp().text)
+    compare_ouput_json(output_json, respholder.getResp().json())
+    assert (resp.status_code == 200)
 
 
 @scenario('Connect.feature', 'Client requests a list of all configured, connected servers (GET /get_servers)')
@@ -288,7 +287,7 @@ def test_create_route():
 
 @then("The route should be created")
 def test_check_route():
-    resultdict = {"token": str, "objectId": int, "status": str, "request": str}
+    resultdict = {"token": str, "objectId": int, "status": str, "request": str} #curretnly fails, JSONDecodeError due to 404
     jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 201)
 

@@ -1,15 +1,17 @@
 import requests
+import json
 
 def jsontester(data, resultdict):
     #resultdict contains the types and the names of what should be in the response
     #for example, {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": int}
-    print(data) #this is for debug purposes
+    #print(data) #this is for debug purposes
     i = 0
-    if (isinstance(data, list) is False):
+    if (isinstance(data, dict) is False):
         data = [data]
     while i < len(data):
         # this checks to make sure that the keys are correct and that they have the correct types
         for item in resultdict:
+            print(item)
             assert (item in data[i])
             if resultdict[item] == "num":
                 assert (isinstance(data[i][item], (int, float, complex)))
@@ -17,6 +19,15 @@ def jsontester(data, resultdict):
                 assert (type(data[i][item]) is resultdict[item])
         i = i + 1
 
+def compare_ouput_json(expectedstring, result):
+    expected = json.loads(expectedstring)
+    for item in result:
+        print(item)
+        assert (item in expected)
+        if item == "objectId":
+            assert (result[item] > expected[item])
+        elif item != "token":
+            assert(expected[item] == result[item])
 
 class respclass:
     def __init__(self, URL, RESP):
