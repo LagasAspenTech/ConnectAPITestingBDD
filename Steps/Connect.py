@@ -195,25 +195,24 @@ def test_check_test():
     assert (resp.status_code == 201)
 
 
-@scenario('Connect.feature', 'Client requests a list discovered tags on connected server instance (POST /get_available_tags)')
+@scenario('Connect.feature', 'Client requests a list discovered tags on connected server instance (POST /get_available_tags)',example_converters=dict(tag_id = str))
 def test_scenario_get_available_tags():
     assert True
 
 
 @given('The client is connected to a valid server instance')
-def test_valid_connect_get_available_tags():
+def valid_connect_get_available_tags():
     assert True
 
 
-@when('The client requests a list of tags')
-def test_get_available_tags():
-    respholder.setResp('/get_available_tags') #needs input params
+@when('The client requests a list of tags with id <tag_id>')
+def get_available_tags(tag_id):
+    respholder.setResp('/get_available_tags', post='{"id":' +tag_id +'}')
 
 
 @then('The client should receive a list of tags')
-def test_check_available_tags():
-    resultdict = {"id": int, "pid": str, "name": str}
-    jsontester(respholder.getResp().json(), resultdict)
+def check_available_tags():
+    assert(len(respholder.getResp().json())>1)
     assert (resp.status_code == 200)
 
 

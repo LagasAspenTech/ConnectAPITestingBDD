@@ -37,7 +37,8 @@ class respclass:
             self.resp = requests.get('http://' + self.url + type)
         elif param is not None and post is not None:
             self.resp = requests.post('http://' + self.url + type, params=param, data=post)
-            #print(self.resp.json())
+        elif param is None and post is not None:
+            self.resp = requests.post('http://' + self.url + type, data=post)
     def setURL(self, URL):
         self.url = URL
     def getURL(self):

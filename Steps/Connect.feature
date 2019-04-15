@@ -51,11 +51,15 @@ Feature: Connect APIs
     When: The client request a list of devices
     Then: The client should receive a list of devices
 
-  Scenario: Client requests a list discovered tags on connected server instance (POST /get_available_tags)
-    Given: The client is connected to a valid server instance
-    When: The client requests a list of tags
-    Then: The client should receive a list of tags
+  Scenario Outline: Client requests a list discovered tags on connected server instance (POST /get_available_tags)
+    Given The client is connected to a valid server instance
+    When The client requests a list of tags with id <tag_id>
+    Then The client should receive a list of tags
 
+    Examples:
+      |tag_id|
+      |1     |
+      |2     |
   Scenario: Client saves selected tags onto server instance's local storage (POST /activate_tags)
     Given: The client is connected to a valid server instance
     When: The client saves a set of tags
