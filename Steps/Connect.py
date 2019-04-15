@@ -227,7 +227,7 @@ def check_activated_tags(output_json_1, output_json_2):
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /create_tags)")
+@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /create_tags)", example_converters=dict(post_value=str, return_value=str))
 def test_scenario_create_tags():
     assert True
 
@@ -237,14 +237,16 @@ def valid_connect_create_tags():
     assert True
 
 
-@when("The client creates a set of tags")
-def create_tags():
-    respholder.setResp('/create_tags') #needs input
+@when("The client creates a set of tags based on <postvalue>")
+def create_tags(postvalue):
+    respholder.setResp('/create_tags', post=postvalue) #there might be an issue here
 
 
-@then("The tags should be created")
-def check_created_tags():
-    jsontester(respholder.getResp().json(), tagresultdict)
+@then("The tags should be created and return value <returnvalue>")
+def check_created_tags(returnvalue):
+    print(respholder.getResp().text) #can't get the stuff out for some reason
+    finalreturn = json.loads(returnvalue)
+    compare_ouput_json(respholder.getResp().json(), finalreturn)
     assert (resp.status_code == 200)
 
 
