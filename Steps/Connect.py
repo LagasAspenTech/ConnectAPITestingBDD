@@ -14,17 +14,17 @@ def test_scenario_get_devices():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_get_devices():
+def valid_connect_get_devices():
     assert True
 
 
 @when("The client requests a list of instances")
-def test_request_instances():
+def request_instances():
     respholder.setResp('/get_devices')
 
 
 @then("The client should receive a list of instances")
-def test_check_instances():
+def check_instances():
     resultdict = {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": "num"} #this contains the things that should be included in the json file and what their type should be
     jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 200)
@@ -36,17 +36,17 @@ def test_scenario_get_device_info():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_get_device_info():
+def valid_connect_get_device_info():
     assert True
 
 
 @when("The client requests connected device data")
-def test_request_device_info():
+def request_device_info():
     respholder.setResp('/get_device_info')
 
 
 @then("The client should receive connected device data")
-def test_check_device_info():
+def check_device_info():
     resultdict = {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": "num"}
     jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 200)
@@ -58,18 +58,18 @@ def test_scenario_get_device_stats():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_get_device_stats():
+def valid_connect_get_device_stats():
     assert True
 
 
 @when("The client requests connected device statistics")
-def test_request_device_stats():
+def request_device_stats():
     respholder.setResp('/get_device_stats')
     print(respholder.getResp().json())
 
 
 @then("The client should receive connected device statistics")
-def test_check_device_stats():
+def check_device_stats():
     resultdict = {"cpuPercent": "num", "memPercent": "num", "diskPercent": "num"}
     jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 200)
@@ -81,17 +81,17 @@ def test_scenario_get_schemas():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_get_schemas():
+def valid_connect_get_schemas():
     assert True
 
 
 @when("The client requests connected device schemas")
-def test_request_device_schemas():
+def request_device_schemas():
     respholder.setResp('/get_schemas')
 
 
 @then("The client should receive connected device schemas")
-def test_check_device_schemas():
+def check_device_schemas():
     #json checking for this on hold due to complexity
     assert (resp.status_code == 200)
 
@@ -156,17 +156,17 @@ def test_scenario_delete_server():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_delete_server():
+def valid_connect_delete_server():
     assert True
 
 
 @when('The client deletes a given server')
-def test_delete_server():
+def delete_server():
     respholder.setResp('/delete_server')
 
 
 @then('The server should be deleted')
-def test_check_delete_server():
+def check_delete_server():
     #json checking for this on hold due to complexity
     assert (resp.status_code == 200 or resp.status_code == 500)
 
@@ -177,19 +177,19 @@ def test_scenario_test_connection():
 
 
 @given('The client is connected to a valid server instance')
-def test_valid_connect_test_connection():
+def valid_connect_test_connection():
     assert True
 
 
 @when('The client requests a list of devices')
-def test_test_connection():
+def test_connection():
     respholder.setResp('/test_connection') #needs input params for server key and so on
 
 
 
 
 @then('The client should receive a list of devices')
-def test_check_test():
+def check_test():
     resultdict = {"id": str, "name": str}
     jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 201)
@@ -222,17 +222,17 @@ def test_scenario_activate_tags():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_activate_tags():
+def valid_connect_activate_tags():
     assert True
 
 
 @when("The client saves a set of tags")
-def test_activate_tags():
+def activate_tags():
     respholder.setResp('/activate_tags') #needs input param
 
 
 @then("The set of tags should be saved")
-def test_check_activated_tags():
+def check_activated_tags():
     jsontester(respholder.getResp().json(), tagresultdict)
     assert (resp.status_code == 200)
 
@@ -243,17 +243,17 @@ def test_scenario_create_tags():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_create_tags():
+def valid_connect_create_tags():
     assert True
 
 
 @when("The client creates a set of tags")
-def test_create_tags():
+def create_tags():
     respholder.setResp('/create_tags') #needs input
 
 
 @then("The tags should be created")
-def test_check_created_tags():
+def check_created_tags():
     jsontester(respholder.getResp().json(), tagresultdict)
     assert (resp.status_code == 200)
 
@@ -264,17 +264,17 @@ def test_scenario_delete_tags():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_delete_tags():
+def valid_connect_delete_tags():
     assert True
 
 
 @when("The client deletes a set of tags")
-def test_delete_tags():
+def delete_tags():
     respholder.setResp('/delete_tags') #needs input yeah
 
 
 @then("The set of tags should be deleted")
-def test_check_deleted_tags():
+def check_deleted_tags():
     print(resp)#here for testing purposes
     assert (resp.status_code == 200)
 
@@ -285,17 +285,17 @@ def test_scenario_create_route():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_create_route():
+def valid_connect_create_route():
     assert True
 
 
 @when("The client creates a route")
-def test_create_route():
+def create_route():
     respholder.setResp('/create_route') #blah blah need in put blah
 
 
 @then("The route should be created")
-def test_check_route():
+def check_route():
     resultdict = {"token": str, "objectId": int, "status": str, "request": str} #curretnly fails, JSONDecodeError due to 404
     jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 201)
@@ -307,17 +307,17 @@ def test_scenario_get_routes():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_get_routes():
+def valid_connect_get_routes():
     assert True
 
 
 @when('The client requests a list of routes')
-def test_get_routes():
+def get_routes():
     respholder.setResp('/get_routes') #need input
 
 
 @then('The client should receive a list of routes')
-def test_check_routes():
+def check_routes():
     #holding off on adding json check due to complexity
     assert (resp.status_code == 200)
 
@@ -328,17 +328,17 @@ def test_scenario_delete_route():
 
 
 @given('The client is connected to a valid server instance')
-def test_valid_connect_delete_route():
+def valid_connect_delete_route():
     assert True
 
 
 @when('The client deletes a given route')
-def test_delete_route():
+def delete_route():
     respholder.setResp('/delete_route') #needs input
 
 
 @then('The route should be deleted')
-def test_check_deleted_route():
+def check_deleted_route():
     print(resp)#here for testing purposes
     assert (resp.status_code == 200)
 
@@ -349,17 +349,17 @@ def test_scenario_create_derived_tags():
 
 
 @given('The client is connected to a valid server instance')
-def test_valid_connect_create_derived_tags():
+def valid_connect_create_derived_tags():
     assert True
 
 
 @when('The client creates a set of derived tags')
-def test_create_derived_tags():
+def create_derived_tags():
     respholder.setResp('/create_derived_tags') #needs input etc
 
 
 @then('The set of derived tags should be created')
-def test_check_derived_tags():
+def check_derived_tags():
     jsontester(respholder.getResp().json(), tagresultdict)
     assert (resp.status_code == 200)
 
@@ -370,17 +370,17 @@ def test_scenario_delete_derived_tags():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_delete_derived_tags():
+def valid_connect_delete_derived_tags():
     assert True
 
 
 @when("The client deletes a set of derived tags")
-def test_delete_derived_tags():
+def delete_derived_tags():
     respholder.setResp('/delete_derived_tags') #needs input
 
 
 @then("The set of derived tags should be deleted")
-def test_check_deleted_derived_tags():
+def check_deleted_derived_tags():
     print(resp) #test etc etc
     assert (resp.status_code == 200)
 
@@ -391,16 +391,16 @@ def test_scenario_activate_device():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_activate_device():
+def valid_connect_activate_device():
     assert True
 
 
 @when("The client activates a device")
-def test_activated_device():
+def activated_device():
     respholder.setResp('/activate_device') #needs input
 
 
 @then("The device should be activated")
-def test_check_activation():
+def check_activation():
     print(resp) #test etc etc
     assert (resp.status_code == 200)
