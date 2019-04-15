@@ -124,17 +124,17 @@ def test_scenario_get_servers():
 
 
 @given("The client is connected to a valid server instance")
-def test_valid_connect_get_servers():
+def valid_connect_get_servers():
     assert True
 
 
 @when("The client requests a list of servers")
-def test_get_servers():
+def get_servers():
     respholder.setResp('/get_servers')
 
 
 @then("The client should receive a list of servers with output <output_json_1> and <output_json_2>")
-def test_check_servers(output_json_1, output_json_2):
+def check_servers(output_json_1, output_json_2):
     output_1 = json.loads(output_json_1)
     output_2 = json.loads(output_json_2)
     i = 0
