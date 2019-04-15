@@ -1,7 +1,7 @@
 from pytest_bdd import scenario, given, when, then
 import requests
 import json
-from Steps.json_testing import jsontester, respclass, compare_ouput_json
+from Steps.json_testing import jsontester, respclass, compare_ouput_json, twooutputs
 
 URL = "10.16.51.178:6584"
 resp = requests.get('http://' + URL + '/get_devices')
@@ -135,18 +135,7 @@ def get_servers():
 
 @then("The client should receive a list of servers with output <output_json_1> and <output_json_2>")
 def check_servers(output_json_1, output_json_2):
-    output_1 = json.loads(output_json_1)
-    output_2 = json.loads(output_json_2)
-    i = 0
-    result = respholder.getResp().json()
-    #yeah, I had to cheat a little to get this to work. But at least it works.
-    for item in result:
-        if item != {}:
-            if item["key"] == output_1["key"] and item["name"] == output_1["name"]:
-                compare_ouput_json(output_1, item)
-            elif item["key"] == output_2["key"] and item["name"] == output_2["name"]:
-                compare_ouput_json(output_2, item)
-
+    twooutputs(output_json_1, output_json_2, respholder)
     assert (resp.status_code == 200)
 
 
@@ -216,7 +205,7 @@ def check_available_tags():
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /activate_tags)")
+@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /activate_tags)",example_converters=dict(serverId = str, post_values = str, output_json_1 = str, output_json_2 = str))
 def test_scenario_activate_tags():
     assert True
 
@@ -226,14 +215,15 @@ def valid_connect_activate_tags():
     assert True
 
 
-@when("The client saves a set of tags")
-def activate_tags():
-    respholder.setResp('/activate_tags') #needs input param
+@when("The client saves a set of tags with a serverid of <serverId> and post values of <post_values>")
+def activate_tags(serverId, post_values):
+    params = {"serverId":serverId}
+    respholder.setResp('/activate_tags',param=params, post=post_values)
 
 
-@then("The set of tags should be saved")
-def check_activated_tags():
-    jsontester(respholder.getResp().json(), tagresultdict)
+@then("The set of tags should be saved, giving results <output_json_1> and <output_json_2>")
+def check_activated_tags(output_json_1, output_json_2):
+    twooutputs(output_json_1, output_json_2, respholder)
     assert (resp.status_code == 200)
 
 

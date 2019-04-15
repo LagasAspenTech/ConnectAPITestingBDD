@@ -29,7 +29,7 @@ Feature: Connect APIs
     Examples:
     |serv_key|post_values|output_json|
     |sim.io|{"id": 0, "name": "Test Simulator 2", "seed": 10, "logdirectory": "./"}|{"token": "3e1b7fd6-964e-4b33-aedc-799771e11799","objectId": 0, "status": "request completed","request": "Add Server","err": null}|
-    |mqtt.io|{"id":0,"name":"MQTT","url":"aspenmqtt.eastus.cloudapp.azure.com","port":1883,"username":"aspenmqtt","password":"AspenTech*99","tls":false,"auth":true,"rootTopic":"test_stream/+","format":"json","dateFormat":"yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags":true}|{"token": "3e1b7fd6-964e-4b33-aedc-799771e11799","objectId": 3,"status": "request completed","request": "Add Server","err": null}|
+    |mqtt.io|{"id":0,"name":"MQTT","url":"aspenmqtt.eastus.cloudapp.azure.com","port":1883,"username":"aspenmqtt","password":"AspenTech*99","tls":false,"auth":true,"rootTopic":"test_stream/+","format":"json","dateFormat":"yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags":true}|{"token": "3e1b7fd6-964e-4b33-aedc-799771e11799","objectId": 0,"status": "request completed","request": "Add Server","err": null}|
 
 
   Scenario Outline: Client requests a list of all configured, connected servers (GET /get_servers)
@@ -39,7 +39,7 @@ Feature: Connect APIs
 
     Examples:
     |output_json_1|output_json_2|
-    |{"key": "mqtt.io","id": 3,"name": "MQTT","url": "aspenmqtt.eastus.cloudapp.azure.com","port": 1883,"username": "aspenmqtt","password": "AspenTech*99","tls": false,"auth": true,"rootTopic": "test_stream/+","format": "JSON","dateFormat": "yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags": true}|{"key": "sim.io","id": 2,"name": "sim","logdirectory": "./results/sim.io.001/","maxreadcount": 100000,"datafrequencysecs": 1}|
+    |{"key": "mqtt.io","id": 0,"name": "MQTT","url": "aspenmqtt.eastus.cloudapp.azure.com","port": 1883,"username": "aspenmqtt","password": "AspenTech*99","tls": false,"auth": true,"rootTopic": "test_stream/+","format": "JSON","dateFormat": "yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags": true}|{"key": "sim.io","id": 2,"name": "sim","logdirectory": "./results/sim.io.001/","maxreadcount": 100000,"datafrequencysecs": 1}|
 
   Scenario: Client deletes a given server (POST /delete_server)
     Given The client is connected to a valid server instance
@@ -60,10 +60,16 @@ Feature: Connect APIs
       |tag_id|
       |1     |
       |2     |
-  Scenario: Client saves selected tags onto server instance's local storage (POST /activate_tags)
+
+  Scenario Outline: Client saves selected tags onto server instance's local storage (POST /activate_tags)
     Given The client is connected to a valid server instance
-    When The client saves a set of tags
-    Then The set of tags should be saved
+    When The client saves a set of tags with a serverid of <serverId> and post values of <post_values>
+    Then The set of tags should be saved, giving results <output_json_1> and <output_json_2>
+
+    Examples:
+    |serverId|post_values|output_json_1|output_json_2|
+    |3       |[{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float"},{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float"}]|{"id": 0, "pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|{"id": 5,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|
+    |2       |[{"id": 0,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"},{"id": 0,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}]                                                                                                                                                                             |{"id": 6,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}|{"id": 7,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}                                                                                                                                                                                                                                            |
 
   Scenario: Client saves selected tags onto server instance's local storage (POST /create_tags)
     Given The client is connected to a valid server instance

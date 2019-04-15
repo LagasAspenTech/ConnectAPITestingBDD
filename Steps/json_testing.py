@@ -1,4 +1,15 @@
 import requests
+import json
+def twooutputs(output_json_1, output_json_2, respholder):
+    result = respholder.getResp().json()
+    output_1 = json.loads(output_json_1)
+    output_2 = json.loads(output_json_2)
+    for item in result:
+        if item != {}:
+            if item["key"] == output_1["key"] and item["name"] == output_1["name"]:
+                compare_ouput_json(output_1, item)
+            elif item["key"] == output_2["key"] and item["name"] == output_2["name"]:
+                compare_ouput_json(output_2, item)
 
 def jsontester(data, resultdict):
     #resultdict contains the types and the names of what should be in the response
@@ -22,7 +33,10 @@ def compare_ouput_json(expected, result):
     for item in result:
         assert (item in expected)
         if item == "objectId" or item == "id":
-            assert (result[item] > expected[item])
+            if expected[item] == 0:
+                assert (result[item] > expected[item])
+            else:
+                assert (result[item] == expected[item])
         elif item != "token":
             assert(expected[item] == result[item])
 
