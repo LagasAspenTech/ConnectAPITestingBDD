@@ -269,7 +269,7 @@ def check_deleted_tags():
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', "Client creates route to define input/output server/tags (POST /create_route)")
+@scenario('Connect.feature', "Client creates route to define input/output server/tags (POST /create_route)", example_converters=dict(postvalue = str, returnvalue = str))
 def test_scenario_create_route():
     assert True
 
@@ -279,19 +279,21 @@ def valid_connect_create_route():
     assert True
 
 
-@when("The client creates a route")
-def create_route():
-    respholder.setResp('/create_route') #blah blah need in put blah
+@when("The client creates a route with <postvalue>")
+def create_route(postvalue):
+    respholder.setResp('/create_route', post = postvalue) #blah blah need in put blah
 
 
-@then("The route should be created")
-def check_route():
-    resultdict = {"token": str, "objectId": int, "status": str, "request": str} #curretnly fails, JSONDecodeError due to 404
-    jsontester(respholder.getResp().json(), resultdict)
+@then("The route should be created with <returnvalue>")
+def check_route(returnvalue):
+    print(respholder.getResp().text)
+    result = respholder.getResp().json()
+    output = json.loads(returnvalue)
+    compare_ouput_json(output, result)
     assert (resp.status_code == 201)
 
 
-@scenario('Connect.feature', "Client requests a list of routes related to the given server id (POST /get_routes)")
+@scenario('Connect.feature', "Client requests a list of routes related to the given server id (POST /get_routes)", example_converters=dict(server_type = str, id_value = str))
 def test_scenario_get_routes():
     assert True
 
@@ -301,13 +303,16 @@ def valid_connect_get_routes():
     assert True
 
 
-@when('The client requests a list of routes')
-def get_routes():
-    respholder.setResp('/get_routes') #need input
+@when('The client requests a list of routes with server type <server_type> and post containing a ID of <id_value>')
+def get_routes(server_type, id_value):
+    serverfull = "ServerType=" + server_type
+    postvalues = '{ "Id":' + id_value+ " }"
+    respholder.setResp('/get_routes', param=serverfull, post=postvalues)
 
 
 @then('The client should receive a list of routes')
 def check_routes():
+    assert (isinstance(respholder.getResp().json(), list)) #no test was provided so I did this, probably not the best but I'm not sure what else to do.
     #holding off on adding json check due to complexity
     assert (resp.status_code == 200)
 

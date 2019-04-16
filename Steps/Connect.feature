@@ -81,15 +81,23 @@ Feature: Connect APIs
     When The client deletes a set of tags
     Then The set of tags should be deleted
 
-  Scenario: Client creates route to define input/output server/tags (POST /create_route)
+  Scenario Outline: Client creates route to define input/output server/tags (POST /create_route)
     Given The client is connected to a valid server instance
-    When The client creates a route
-    Then The route should be created
+    When The client creates a route with <postvalue>
+    Then The route should be created with <returnvalue>
+    Examples:
+    |postvalue|returnvalue|
+    |{"id": 0,"inServerId": 2,"outServerId":3,"startTime":"2019-04-08T13:55:00Z","tagIDMap": {"6": 4"7": 5},"options": {"Deadbanding": 0,"Interpolation": 0,"Filter": 0,"KeepAlive": 1,"InstrumentRangeMin": 0,"InstrumentRangeMax": 0}}|{"token": "a30981ee-64d0-4d89-9b94-5a50857b6239","objectId": 0, "status": "request completed","request": "Add Route","err": null}|
 
-  Scenario: Client requests a list of routes related to the given server id (POST /get_routes)
+
+  Scenario Outline: Client requests a list of routes related to the given server id (POST /get_routes)
     Given The client is connected to a valid server instance
-    When The client requests a list of routes
+    When The client requests a list of routes with server type <server_type> and post containing a ID of <id_value>
     Then The client should receive a list of routes
+    Examples:
+    |server_type|id_value|
+    |input      |3      |
+    |output     |2      |
 
   Scenario: Client deletes route with a given ID (POST /delete_route)
     Given The client is connected to a valid server instance
