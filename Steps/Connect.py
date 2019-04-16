@@ -1,11 +1,12 @@
 from pytest_bdd import scenario, given, when, then
 import requests
 import json
-from Steps.json_testing import jsontester, respclass, compare_ouput_json, twooutputs
+from Steps.json_testing import jsontester, respclass, compare_ouput_json, twooutputs, memoryclass
 
 URL = "10.16.51.178:6584"
 resp = requests.get('http://' + URL + '/get_devices')
 respholder = respclass(URL, resp)
+mem = memoryclass()
 tagresultdict = {"id": int, "pid": str, "name": str, "serie": str, "key": str, "LastValue": int}
 
 @scenario('Connect.feature', 'Client requests a list of Aspen Connect instances (GET /get_devices)')

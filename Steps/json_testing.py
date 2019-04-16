@@ -39,7 +39,23 @@ def compare_ouput_json(expected, result):
                 assert (result[item] == expected[item])
         elif item != "token":
             assert(expected[item] == result[item])
-
+class memoryclass:
+    def __init__(self):
+        self.serverIDs = []
+        self.routeIDs = []
+        self.tagIDs = {0:[]}
+    def getServerId(self, i):
+        return(self.servIDs[i])
+    def addServer(self, i):
+        self.servIDs.append(i)
+    def addRoute(self, i):
+        self.routeIDs.append(i)
+    def getRoute(self, i):
+        return(self.routeIDs[i])
+    def addTag(self, x, y):
+        self.tagIDs[x].append(y)
+    def getTag(self, x, y):
+        return(self.tagIDs[x][y])
 class respclass:
     def __init__(self, URL, RESP):
         self.url = URL
