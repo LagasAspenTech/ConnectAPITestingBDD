@@ -45,17 +45,21 @@ class memoryclass:
         self.routeIDs = []
         self.tagIDs = {0:[]}
     def getServerId(self, i):
-        return(self.servIDs[i])
+        return(self.serverIDs[i])
     def addServer(self, i):
-        self.servIDs.append(i)
+        self.serverIDs.append(i)
     def addRoute(self, i):
         self.routeIDs.append(i)
     def getRoute(self, i):
         return(self.routeIDs[i])
-    def addTag(self, x, y):
-        self.tagIDs[x].append(y)
+    def addTag(self, server, tag):
+        if server in self.tagIDs:
+            self.tagIDs[server].append(tag)
+        else:
+            self.tagIDs[server] = [tag]
     def getTag(self, x, y):
         return(self.tagIDs[x][y])
+
 class respclass:
     def __init__(self, URL, RESP):
         self.url = URL

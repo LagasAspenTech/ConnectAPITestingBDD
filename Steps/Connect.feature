@@ -48,7 +48,7 @@ Feature: Connect APIs
 
   Scenario: Client requests a list of devices (POST /test_connection)
     Given The client is connected to a valid server instance
-    When The client request a list of devices
+    When The client requests a list of devices
     Then The client should receive a list of devices
 
   Scenario Outline: Client requests a list discovered tags on connected server instance (POST /get_available_tags)
@@ -68,13 +68,18 @@ Feature: Connect APIs
 
     Examples:
     |serverId|post_values|output_json_1|output_json_2|
-    |3       |[{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float"},{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float"}]|{"id": 0, "pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|{"id": 5,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|
-    |2       |[{"id": 0,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"},{"id": 0,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}]                                                                                                                                                                             |{"id": 6,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}|{"id": 7,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}                                                                                                                                                                                                                                            |
+    |1      |[{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float"},{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float"}]|{"id": 0, "pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|
+    |0       |[{"id": 0,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"},{"id": 0,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}]                                                                                                                                                                             |{"id": 0,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}|{"id": 0,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}                                                                                                                                                                                                                                            |
 
-  Scenario: Client saves selected tags onto server instance's local storage (POST /create_tags)
+  Scenario Outline: Client saves selected tags onto server instance's local storage (POST /create_tags)
     Given The client is connected to a valid server instance
-    When The client creates a set of tags
-    Then The tags should be created
+    When The client creates a set of tags for server number <servnum> with key <servkey>
+    Then The tags should be created with a server key of <servkey>
+
+    Examples:
+    |servnum|servkey|
+    |0      |sim.io |
+    |1      |mqtt.io|
 
   Scenario: Client deletes tags with corresponding IDs (POST /delete_tags)
     Given The client is connected to a valid server instance
@@ -87,7 +92,7 @@ Feature: Connect APIs
     Then The route should be created with <returnvalue>
     Examples:
     |postvalue|returnvalue|
-    |{"id": 0,"inServerId": 2,"outServerId":3,"startTime":"2019-04-08T13:55:00Z","tagIDMap": {"6": 4"7": 5},"options": {"Deadbanding": 0,"Interpolation": 0,"Filter": 0,"KeepAlive": 1,"InstrumentRangeMin": 0,"InstrumentRangeMax": 0}}|{"token": "a30981ee-64d0-4d89-9b94-5a50857b6239","objectId": 0, "status": "request completed","request": "Add Route","err": null}|
+    |,"startTime":"2019-04-08T13:55:00Z","tagIDMap": {"6": 4"7": 5},"options": {"Deadbanding": 0,"Interpolation": 0,"Filter": 0,"KeepAlive": 1,"InstrumentRangeMin": 0,"InstrumentRangeMax": 0}}|{"token": "a30981ee-64d0-4d89-9b94-5a50857b6239","objectId": 0, "status": "request completed","request": "Add Route","err": null}|
 
 
   Scenario Outline: Client requests a list of routes related to the given server id (POST /get_routes)

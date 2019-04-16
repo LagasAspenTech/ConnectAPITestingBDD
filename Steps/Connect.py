@@ -89,6 +89,7 @@ def valid_connect_get_schemas():
 @when("The client requests connected device schemas")
 def request_device_schemas():
     respholder.setResp('/get_schemas')
+    print(respholder.getResp().json())
 
 
 @then("The client should receive connected device schemas")
@@ -115,7 +116,9 @@ def add_server(serv_key, post_values):
 
 @then("A new server instance should be added with output <output_json>")
 def check_server(output_json):
-    compare_ouput_json(json.loads(output_json), respholder.getResp().json())
+    result = respholder.getResp().json()
+    mem.addServer(result['objectId']) #this adds the server we create to the object in question
+    compare_ouput_json(json.loads(output_json), result)
     assert (resp.status_code == 200)
 
 
@@ -172,7 +175,7 @@ def valid_connect_test_connection():
 
 
 @when('The client requests a list of devices')
-def test_connection():
+def when_test_connection():
     respholder.setResp('/test_connection') #needs input params for server key and so on
 
 
@@ -206,7 +209,7 @@ def check_available_tags():
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /activate_tags)",example_converters=dict(serverId = str, post_values = str, output_json_1 = str, output_json_2 = str))
+@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /activate_tags)",example_converters=dict(serverId = int, post_values = str, output_json_1 = str, output_json_2 = str))
 def test_scenario_activate_tags():
     assert True
 
@@ -218,17 +221,20 @@ def valid_connect_activate_tags():
 
 @when("The client saves a set of tags with a serverid of <serverId> and post values of <post_values>")
 def activate_tags(serverId, post_values):
-    params = {"serverId":serverId}
+    params = {"serverId":str(mem.getServerId(serverId))}
     respholder.setResp('/activate_tags',param=params, post=post_values)
 
 
 @then("The set of tags should be saved, giving results <output_json_1> and <output_json_2>")
-def check_activated_tags(output_json_1, output_json_2):
+def check_activated_tags(serverId, output_json_1, output_json_2):
     twooutputs(output_json_1, output_json_2, respholder)
+    resps = respholder.getResp().json()
+    for item in resps:
+        mem.addTag(str(serverId), item["id"])
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /create_tags)")
+@scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /create_tags)", example_converters=dict(servnum = int, servkey = str))
 def test_scenario_create_tags():
     assert True
 
@@ -238,14 +244,19 @@ def valid_connect_create_tags():
     assert True
 
 
-@when("The client creates a set of tags")
-def create_tags():
-    respholder.setResp('/create_tags') #needs input
+@when("The client creates a set of tags for server number <servnum> with key <servkey>")
+def create_tags(servnum, servkey):
+    params = '{"serverId": ' + str(mem.getServerId(servnum)) + '}'
+    posts = '[{"id":0,"pid":"pid1","name":"name1", "key":"' + servkey + '"}]'
+    respholder.setResp('/create_tags', param=params, post=posts) #not creating properly, ask why tomorow
 
 
-@then("The tags should be created")
-def check_created_tags():
-    jsontester(respholder.getResp().json(), tagresultdict)
+@then("The tags should be created with a server key of <servkey>")
+def check_created_tags(servkey):
+    print(respholder.getResp().text)
+    result = '[{"id":0,"pid":"pid1","name":"name1", "key":"' + servkey + '"}]'
+    output = respholder.getResp().json()
+    compare_ouput_json(output, result)
     assert (resp.status_code == 200)
 
 
@@ -282,7 +293,9 @@ def valid_connect_create_route():
 
 @when("The client creates a route with <postvalue>")
 def create_route(postvalue):
-    respholder.setResp('/create_route', post = postvalue) #blah blah need in put blah
+    finalpostvalue = '{"id": 0,"inServerId": '+str(mem.getServerId(0)) + ',"outServerId":' +str(mem.getServerId(1)) + postvalue
+    print(finalpostvalue)
+    respholder.setResp('/create_route', post = finalpostvalue)
 
 
 @then("The route should be created with <returnvalue>")
