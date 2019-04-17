@@ -117,6 +117,7 @@ def add_server(serv_key, post_values):
 @then("A new server instance should be added with output <output_json>")
 def check_server(output_json):
     result = respholder.getResp().json()
+    print("object id is " + str(result['objectId']))
     mem.addServer(result['objectId']) #this adds the server we create to the object in question
     compare_ouput_json(json.loads(output_json), result)
     assert (resp.status_code == 200)
@@ -222,6 +223,7 @@ def valid_connect_activate_tags():
 @when("The client saves a set of tags with a serverid of <serverId> and post values of <post_values>")
 def activate_tags(serverId, post_values):
     params = {"serverId":str(mem.getServerId(serverId))}
+    print(params)
     respholder.setResp('/activate_tags',param=params, post=post_values)
 
 
@@ -230,7 +232,7 @@ def check_activated_tags(serverId, output_json_1, output_json_2):
     twooutputs(output_json_1, output_json_2, respholder)
     resps = respholder.getResp().json()
     for item in resps:
-        mem.addTag(str(serverId), item["id"])
+        mem.addTag(serverId, item["id"])
     assert (resp.status_code == 200)
 
 
@@ -253,7 +255,6 @@ def create_tags(servnum, servkey):
 
 @then("The tags should be created with a server key of <servkey>")
 def check_created_tags(servkey):
-    print(respholder.getResp().text)
     result = '[{"id":0,"pid":"pid1","name":"name1", "key":"' + servkey + '"}]'
     output = respholder.getResp().json()
     compare_ouput_json(output, result)
@@ -291,8 +292,16 @@ def valid_connect_create_route():
     assert True
 
 
-@when("The client creates a route with <postvalue>")
-def create_route(postvalue):
+@when("The client creates a route with <postvalue1> and <postvalue2>")
+def create_route(postvalue1, postvalue2):
+    tagmap = '"'+str(mem.getTag(0,0))+'":'+str((mem.getTag(1,0)))
+    print(tagmap)
+    i = 1
+    while i < len(mem.getTags(0)):
+        tagmap = tagmap + ', "'+str(mem.getTag(0,i))+'":'+str((mem.getTag(1,i)))
+        print(tagmap)
+        i = i+1
+    postvalue = postvalue1 + tagmap + postvalue2
     finalpostvalue = '{"id": 0,"inServerId": '+str(mem.getServerId(0)) + ',"outServerId":' +str(mem.getServerId(1)) + postvalue
     print(finalpostvalue)
     respholder.setResp('/create_route', post = finalpostvalue)

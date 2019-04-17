@@ -1,6 +1,8 @@
 import requests
 import json
 def twooutputs(output_json_1, output_json_2, respholder):
+    print(respholder.getResp())
+    print(respholder.getResp().text)
     result = respholder.getResp().json()
     output_1 = json.loads(output_json_1)
     output_2 = json.loads(output_json_2)
@@ -46,6 +48,8 @@ class memoryclass:
         self.tagIDs = {0:[]}
     def getServerId(self, i):
         return(self.serverIDs[i])
+    def getServerIds(self):
+        return(self.serverIDs)
     def addServer(self, i):
         self.serverIDs.append(i)
     def addRoute(self, i):
@@ -59,6 +63,11 @@ class memoryclass:
             self.tagIDs[server] = [tag]
     def getTag(self, x, y):
         return(self.tagIDs[x][y])
+    def getTags(self, x):
+        return(self.tagIDs[x])
+
+    def getallTags(self):
+        return(self.tagIDs)
 
 class respclass:
     def __init__(self, URL, RESP):

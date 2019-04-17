@@ -88,11 +88,11 @@ Feature: Connect APIs
 
   Scenario Outline: Client creates route to define input/output server/tags (POST /create_route)
     Given The client is connected to a valid server instance
-    When The client creates a route with <postvalue>
+    When The client creates a route with <postvalue1> and <postvalue2>
     Then The route should be created with <returnvalue>
     Examples:
-    |postvalue|returnvalue|
-    |,"startTime":"2019-04-08T13:55:00Z","tagIDMap": {"6": 4"7": 5},"options": {"Deadbanding": 0,"Interpolation": 0,"Filter": 0,"KeepAlive": 1,"InstrumentRangeMin": 0,"InstrumentRangeMax": 0}}|{"token": "a30981ee-64d0-4d89-9b94-5a50857b6239","objectId": 0, "status": "request completed","request": "Add Route","err": null}|
+    |postvalue1|postvalue2|returnvalue|
+    |,"startTime":"2019-04-08T13:55:00Z","tagIDMap": {|},"options": {"Deadbanding": 0,"Interpolation": 0,"Filter": 0,"KeepAlive": 1,"InstrumentRangeMin": 0,"InstrumentRangeMax": 0}}|{"token": "a30981ee-64d0-4d89-9b94-5a50857b6239","objectId": 0, "status": "request completed","request": "Add Route","err": null}|
 
 
   Scenario Outline: Client requests a list of routes related to the given server id (POST /get_routes)
