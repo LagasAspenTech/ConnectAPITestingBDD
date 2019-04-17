@@ -51,16 +51,6 @@ Feature: Connect APIs
     When The client requests a list of devices
     Then The client should receive a list of devices
 
-  Scenario Outline: Client requests a list discovered tags on connected server instance (POST /get_available_tags)
-    Given The client is connected to a valid server instance
-    When The client requests a list of tags with id <tag_id>
-    Then The client should receive a list of tags
-
-    Examples:
-      |tag_id|
-      |0     |
-      |1     |
-
   Scenario Outline: Client saves selected tags onto server instance's local storage (POST /activate_tags)
     Given The client is connected to a valid server instance
     When The client saves a set of tags with a serverid of <serverId> and post values of <post_values>
@@ -70,6 +60,16 @@ Feature: Connect APIs
     |serverId|post_values|output_json_1|output_json_2|
     |1      |[{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float"},{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float"}]|{"id": 0, "pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|
     |0       |[{"id": 0,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"},{"id": 0,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}]                                                                                                                                                                             |{"id": 0,"pid": "mqtttest","name": "mqtttest","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}|{"id": 0,"pid": "mqtttest1","name": "mqtttest1","serie": "ramp","key": "sim.io","LastValue": 0,"LastTime": "0001-01-01T00:00:00Z"}                                                                                                                                                                                                                                            |
+
+  Scenario Outline: Client requests a list discovered tags on connected server instance (POST /get_available_tags)
+    Given The client is connected to a valid server instance
+    When The client requests a list of tags with id <tag_id>
+    Then The client should receive a list of tags
+
+    Examples:
+      |tag_id|
+      |0     |
+      |1     |
 
   Scenario Outline: Client saves selected tags onto server instance's local storage (POST /create_tags)
     Given The client is connected to a valid server instance

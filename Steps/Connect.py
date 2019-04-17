@@ -185,28 +185,6 @@ def check_test():
     jsontester(respholder.getResp().json(), resultdict)
     assert (resp.status_code == 201)
 
-
-@scenario('Connect.feature', 'Client requests a list discovered tags on connected server instance (POST /get_available_tags)',example_converters=dict(tag_id = str))
-def test_scenario_get_available_tags():
-    assert True
-
-
-@given('The client is connected to a valid server instance')
-def valid_connect_get_available_tags():
-    assert True
-
-
-@when('The client requests a list of tags with id <tag_id>')
-def get_available_tags(tag_id):
-    respholder.setResp('/get_available_tags', post='{"id":' +tag_id +'}')
-
-
-@then('The client should receive a list of tags')
-def check_available_tags():
-    assert(len(respholder.getResp().json())>1)
-    assert (resp.status_code == 200)
-
-
 @scenario('Connect.feature', "Client saves selected tags onto server instance's local storage (POST /activate_tags)",example_converters=dict(serverId = int, post_values = str, output_json_1 = str, output_json_2 = str))
 def test_scenario_activate_tags():
     assert True
@@ -229,6 +207,43 @@ def check_activated_tags(serverId, output_json_1, output_json_2):
     resps = respholder.getResp().json()
     for item in resps:
         mem.addTag(serverId, item["id"])
+    assert (resp.status_code == 200)
+
+
+@scenario('Connect.feature', 'Client requests a list discovered tags on connected server instance (POST /get_available_tags)',example_converters=dict(tag_id = int))
+def test_scenario_get_available_tags():
+    assert True
+
+
+@given('The client is connected to a valid server instance')
+def valid_connect_get_available_tags():
+    assert True
+
+
+@when('The client requests a list of tags with id <tag_id>')
+def get_available_tags(tag_id):
+    print('{"id":' +str(mem.getServerId(tag_id)) +'}')
+    respholder.setResp('/get_available_tags', post='{"id":' +str(mem.getServerId(tag_id)) +'}')
+
+
+@then('The client should receive a list of tags')
+def check_available_tags(tag_id):
+    response = respholder.getResp().json()
+    wantedtags = mem.getTags(tag_id)
+    tagdict = {}
+    print(response)
+    for item in wantedtags:
+        tagdict[item] = False
+        print(item)
+    print("starting response loop")
+    for item in response:
+        if item['id'] is not 0:
+            print(item['id'])
+        if item['id'] in tagdict:
+            #print(item['id'])
+            tagdict[item['id']] = True
+    for item in tagdict:
+        assert (tagdict[item] == True)
     assert (resp.status_code == 200)
 
 
