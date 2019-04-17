@@ -69,7 +69,6 @@ Feature: Connect APIs
     Examples:
       |tag_id|
       |0     |
-      |1     |
 
   Scenario Outline: Client saves selected tags onto server instance's local storage (POST /create_tags)
     Given The client is connected to a valid server instance

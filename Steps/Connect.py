@@ -92,6 +92,11 @@ def request_device_schemas():
 
 @then("The client should receive connected device schemas")
 def check_device_schemas():
+    response = respholder.getResp().json()
+    for item in response:
+        schema = item["serverSchema"]["definitions"]["server"] #ask if this is the right part to be referencing tomorrow
+        print(schema)
+        mem.addSchema(schema)
     #json checking for this on hold due to complexity
     assert (resp.status_code == 200)
 
@@ -210,7 +215,7 @@ def check_activated_tags(serverId, output_json_1, output_json_2):
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', 'Client requests a list discovered tags on connected server instance (POST /get_available_tags)',example_converters=dict(tag_id = int))
+@scenario('Connect.feature', 'Client requests a list discovered tags on connected server instance (POST /get_available_tags)',example_converters=dict(tag_id = int)) #this does not work with MQTT servers, so don't use them for it
 def test_scenario_get_available_tags():
     assert True
 

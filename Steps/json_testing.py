@@ -41,6 +41,7 @@ class memoryclass:
     def __init__(self):
         self.serverIDs = []
         self.routeIDs = []
+        self.schemas = []
         self.tagIDs = {0:[]}
     def getServerId(self, i):
         return(self.serverIDs[i])
@@ -61,9 +62,12 @@ class memoryclass:
         return(self.tagIDs[x][y])
     def getTags(self, x):
         return(self.tagIDs[x])
-
     def getallTags(self):
         return(self.tagIDs)
+    def addSchema(self, newschema):
+        self.schemas.append(newschema)
+    def getSchemas(self):
+        return(self.schemas)
 
 class respclass:
     def __init__(self, URL, RESP):
