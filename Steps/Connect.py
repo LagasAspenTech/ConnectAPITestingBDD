@@ -66,7 +66,6 @@ def valid_connect_get_device_stats():
 @when("The client requests connected device statistics")
 def request_device_stats():
     respholder.setResp('/get_device_stats')
-    print(respholder.getResp().json())
 
 
 @then("The client should receive connected device statistics")
@@ -89,7 +88,6 @@ def valid_connect_get_schemas():
 @when("The client requests connected device schemas")
 def request_device_schemas():
     respholder.setResp('/get_schemas')
-    print(respholder.getResp().json())
 
 
 @then("The client should receive connected device schemas")
@@ -117,7 +115,6 @@ def add_server(serv_key, post_values):
 @then("A new server instance should be added with output <output_json>")
 def check_server(output_json):
     result = respholder.getResp().json()
-    print("object id is " + str(result['objectId']))
     mem.addServer(result['objectId']) #this adds the server we create to the object in question
     compare_ouput_json(json.loads(output_json), result)
     assert (resp.status_code == 200)
@@ -223,7 +220,6 @@ def valid_connect_activate_tags():
 @when("The client saves a set of tags with a serverid of <serverId> and post values of <post_values>")
 def activate_tags(serverId, post_values):
     params = {"serverId":str(mem.getServerId(serverId))}
-    print(params)
     respholder.setResp('/activate_tags',param=params, post=post_values)
 
 
@@ -313,10 +309,11 @@ def check_route(returnvalue):
     result = respholder.getResp().json()
     output = json.loads(returnvalue)
     compare_ouput_json(output, result)
+    mem.addRoute(result["objectId"])
     assert (resp.status_code == 201)
 
 
-@scenario('Connect.feature', "Client requests a list of routes related to the given server id (POST /get_routes)", example_converters=dict(server_type = str, id_value = str))
+@scenario('Connect.feature', "Client requests a list of routes related to the given server id (POST /get_routes)", example_converters=dict(server_type = str, id_value = int))
 def test_scenario_get_routes():
     assert True
 
@@ -329,14 +326,13 @@ def valid_connect_get_routes():
 @when('The client requests a list of routes with server type <server_type> and post containing a ID of <id_value>')
 def get_routes(server_type, id_value):
     serverfull = "ServerType=" + server_type
-    postvalues = '{ "Id":' + id_value+ " }"
+    postvalues = '{ "Id":' + str(mem.getServerId(id_value))+ " }"
     respholder.setResp('/get_routes', param=serverfull, post=postvalues)
 
 
 @then('The client should receive a list of routes')
 def check_routes():
-    assert (isinstance(respholder.getResp().json(), list)) #no test was provided so I did this, probably not the best but I'm not sure what else to do.
-    #holding off on adding json check due to complexity
+    assert (respholder.getResp().json()[0]['id'] == mem.getRoute(0))#get route can support multiple routes cuz like, why not?
     assert (resp.status_code == 200)
 
 

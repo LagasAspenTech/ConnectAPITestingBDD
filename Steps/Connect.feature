@@ -101,8 +101,8 @@ Feature: Connect APIs
     Then The client should receive a list of routes
     Examples:
     |server_type|id_value|
-    |input      |3      |
-    |output     |2      |
+    |input      |0      |
+    |output     |1      |
 
   Scenario: Client deletes route with a given ID (POST /delete_route)
     Given The client is connected to a valid server instance

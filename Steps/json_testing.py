@@ -1,8 +1,6 @@
 import requests
 import json
 def twooutputs(output_json_1, output_json_2, respholder):
-    print(respholder.getResp())
-    print(respholder.getResp().text)
     result = respholder.getResp().json()
     output_1 = json.loads(output_json_1)
     output_2 = json.loads(output_json_2)
@@ -16,14 +14,12 @@ def twooutputs(output_json_1, output_json_2, respholder):
 def jsontester(data, resultdict):
     #resultdict contains the types and the names of what should be in the response
     #for example, {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": int}
-    #print(data) #this is for debug purposes
     i = 0
     if (isinstance(data, list) is False):
         data = [data]
     while i < len(data):
         # this checks to make sure that the keys are correct and that they have the correct types
         for item in resultdict:
-            print(item)
             assert (item in data[i])
             if resultdict[item] == "num":
                 assert (isinstance(data[i][item], (int, float, complex)))
