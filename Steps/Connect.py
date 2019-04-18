@@ -95,7 +95,6 @@ def check_device_schemas():
     response = respholder.getResp().json()
     for item in response:
         schema = item["serverSchema"]["definitions"]["server"] #ask if this is the right part to be referencing tomorrow
-        print(schema)
         mem.addSchema(schema)
     #json checking for this on hold due to complexity
     assert (resp.status_code == 200)
@@ -206,7 +205,6 @@ def valid_connect_get_available_tags():
 
 @when('The client requests a list of tags with id <tag_id>')
 def get_available_tags(tag_id):
-    print('{"id":' +str(mem.getServerId(tag_id)) +'}')
     respholder.setResp('/get_available_tags', post='{"id":' +str(mem.getServerId(tag_id)) +'}')
 
 
@@ -215,16 +213,10 @@ def check_available_tags(tag_id):
     response = respholder.getResp().json()
     wantedtags = mem.getTags(tag_id)
     tagdict = {}
-    print(response)
     for item in wantedtags:
         tagdict[item] = False
-        print(item)
-    print("starting response loop")
     for item in response:
-        if item['id'] is not 0:
-            print(item['id'])
         if item['id'] in tagdict:
-            #print(item['id'])
             tagdict[item['id']] = True
     for item in tagdict:
         assert (tagdict[item] == True)
@@ -278,7 +270,6 @@ def delete_tags(server_number):
         else:
             postvalue = postvalue + ']'
         i = i + 1
-    print(postvalue)
     respholder.setResp('/delete_tags', post=postvalue)
 
 
@@ -303,7 +294,6 @@ def create_route(postvalue1, postvalue2):
     i = 1
     while i < len(mem.getTags(0)):
         tagmap = tagmap + ', "'+str(mem.getTag(0,i))+'":'+str((mem.getTag(1,i)))
-        print(tagmap)
         i = i+1
     postvalue = postvalue1 + tagmap + postvalue2
     finalpostvalue = '{"id": 0,"inServerId": '+str(mem.getServerId(0)) + ',"outServerId":' +str(mem.getServerId(1)) + postvalue
@@ -312,7 +302,6 @@ def create_route(postvalue1, postvalue2):
 
 @then("The route should be created with <returnvalue>")
 def check_route(returnvalue):
-    print(respholder.getResp().text)
     result = respholder.getResp().json()
     output = json.loads(returnvalue)
     compare_ouput_json(output, result)
@@ -378,18 +367,12 @@ def valid_connect_create_derived_tags():
 @when('The client creates a set of derived tags on <serverId> with <post_values>')
 def create_derived_tags(serverId, post_values):
     params = {"serverId":str(mem.getServerId(serverId))}
-    print(params)
     respholder.setResp('/create_derived_tags',param=params, post=post_values)
 
 @then('The set of derived tags should be created with <output_json_1> and <output_json_2>')
 def check_derived_tags(output_json_1, output_json_2, serverId):
-    print("at the end")
-    print(respholder.getResp())
-    print(respholder.getResp().text)
-    print(respholder.getResp().json())
     twooutputs(output_json_1, output_json_2, respholder)
     resps = respholder.getResp().json()
-    print(resps)
     for item in resps:
         mem.addderTag(serverId, item["id"])
     assert (resp.status_code == 200)
@@ -412,7 +395,6 @@ def delete_derived_tags():
 
 @then("The set of derived tags should be deleted")
 def check_deleted_derived_tags():
-    print(resp) #test etc etc
     assert (resp.status_code == 200)
 
 
@@ -433,7 +415,6 @@ def activated_device():
 
 @then("The device should be activated")
 def check_activation():
-    print(resp) #test etc etc
     assert (resp.status_code == 200)
 
 
