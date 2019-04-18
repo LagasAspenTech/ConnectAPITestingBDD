@@ -1,5 +1,7 @@
 import requests
 import json
+
+#twooutputs compares a response containing a list of multiple json items to two valid output jsons. If the names and keys of something in the response match one of the two output jsons, they are then compared
 def twooutputs(output_json_1, output_json_2, respholder):
     result = respholder.getResp().json()
     output_1 = json.loads(output_json_1)
@@ -11,6 +13,8 @@ def twooutputs(output_json_1, output_json_2, respholder):
             elif item["key"] == output_2["key"] and item["name"] == output_2["name"]:
                 compare_ouput_json(output_2, item)
 
+
+#jsontester compares the types of an element in a json to a dictionary listing what the types of the elements in the json should be. Only use this if you don't know what the actual values of the elements should be
 def jsontester(data, resultdict):
     #resultdict contains the types and the names of what should be in the response
     #for example, {"deviceName": str, "versionNumber": str, "macAddress": str, "ipAddress": str, "lastBroadcast": int}
@@ -27,6 +31,7 @@ def jsontester(data, resultdict):
                 assert (type(data[i][item]) is resultdict[item])
         i = i + 1
 
+#compare output json compares a json response to the expected json response and makes sure they are equal. Token is variable, so that is ignored.
 def compare_ouput_json(expected, result):
     for item in result:
         assert (item in expected)
@@ -37,6 +42,8 @@ def compare_ouput_json(expected, result):
                 assert (result[item] == expected[item])
         elif item != "token":
             assert(expected[item] == result[item])
+
+#memoryclass is used to store values that need to be referenced in multiple tests which change each time the tests are run, such as server IDs or route IDs
 class memoryclass:
     def __init__(self):
         self.serverIDs = []
@@ -81,6 +88,7 @@ class memoryclass:
     def getSchemas(self):
         return(self.schemas)
 
+#respclass sends out requests to the server and stores the response
 class respclass:
     def __init__(self, URL, RESP):
         self.url = URL
