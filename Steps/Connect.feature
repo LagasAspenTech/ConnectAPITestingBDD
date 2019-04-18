@@ -21,6 +21,8 @@ Feature: Connect APIs
     When The client requests connected device schemas
     Then The client should receive connected device schemas
 
+  #this initializes the servers used throughout the rest of the tests. They are referenced based on order of initialization (0 is Test Simulator 2, 1 is MQTT, etc) so if you change the order remember to change the references to the order
+  #references to the order are included in the tests for activate_tags, delete_tags, create_route, and delete_server
   Scenario Outline: Client creates an instance of a protocol plugin as a standalone server (POST /add_server)
     Given The client is connected to a valid server instance
     When The client adds a server instance with server key <serv_key> and post values <post_values>
@@ -88,6 +90,7 @@ Feature: Connect APIs
 
   #The API call should return a value of 201, but instead it always returns 200. However, the route is in fact successfully created. As a result, I chose to have it accept a value of 200 as well.
   #To make it not accept a value of 200, uncomment line 321 in connect.py and comment out line 320
+  #Like servers, routes are numbered based on order of initialization, so be careful when adding new test cases
   Scenario Outline: Client creates route to define input/output server/tags (POST /create_route)
     Given The client is connected to a valid server instance
     When The client creates a route with <postvalue1> and <postvalue2>
@@ -120,7 +123,6 @@ Feature: Connect APIs
     When The client creates a set of derived tags on <serverId> with <post_values>
     Then The set of derived tags should be created with <output_json_1> and <output_json_2>
 
-
     Examples:
     |serverId|post_values|output_json_1|output_json_2|
     |1      |[{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float"},{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float"}]|{"id": 0, "pid": "test_stream/sample_data;Time:Level 2.Value2-2","name": "test_stream/newtopic;Time:Level 2.Value2-2","key": "mqtt.io","topic": "MQTT/data","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|{"id": 0,"pid": "test_stream/sample_data;Time:Level 2.Level 3.Time","name": "test_stream/newtopic;Time:Level 2.Level 3.Time","key": "mqtt.io","topic": "MQTT/data1","valueKey": "Level 2","timeKey": "Time","type": "float","lastValue": "","LastTime": ""}|
@@ -137,7 +139,7 @@ Feature: Connect APIs
     When The client activates a device
     Then The device should be activated
 
-
+#this test has to be run last because it deletes the servers used in most of the other tests
   Scenario Outline: Client deletes a given server (POST /delete_server)
     Given The client is connected to a valid server instance
     When The client deletes a given server <servernumber>

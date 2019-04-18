@@ -44,6 +44,7 @@ def compare_ouput_json(expected, result):
             assert(expected[item] == result[item])
 
 #memoryclass is used to store values that need to be referenced in multiple tests which change each time the tests are run, such as server IDs or route IDs
+#this is why tags, routes, servers, and so on, are referenced not by ID in the test cases, but by the order of initialization
 class memoryclass:
     def __init__(self):
         self.serverIDs = []
