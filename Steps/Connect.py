@@ -1,3 +1,5 @@
+#Connect.py contains the python code for the test cases outlined in Connect.feature
+
 from pytest_bdd import scenario, given, when, then
 import requests
 import json

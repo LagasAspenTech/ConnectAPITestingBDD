@@ -1,3 +1,4 @@
+#Connect.feature outlines the test cases that are included in Connect.py
 Feature: Connect APIs
   All the APIs for the Connect system
 
