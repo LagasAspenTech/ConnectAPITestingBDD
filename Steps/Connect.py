@@ -146,27 +146,6 @@ def check_servers(output_json_1, output_json_2):
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', 'Client deletes a given server (POST /delete_server)')
-def test_scenario_delete_server():
-    assert True
-
-
-@given("The client is connected to a valid server instance")
-def valid_connect_delete_server():
-    assert True
-
-
-@when('The client deletes a given server')
-def delete_server():
-    respholder.setResp('/delete_server')
-
-
-@then('The server should be deleted')
-def check_delete_server():
-    #json checking for this on hold due to complexity
-    assert (resp.status_code == 200 or resp.status_code == 500)
-
-
 @scenario('Connect.feature', 'Client requests a list of devices (POST /test_connection)')
 def test_scenario_test_connection():
     assert True
@@ -277,7 +256,7 @@ def check_created_tags(servkey):
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', "Client deletes tags with corresponding IDs (POST /delete_tags)")
+@scenario('Connect.feature', "Client deletes tags with corresponding IDs (POST /delete_tags)", example_converters=dict(server_number = int))
 def test_scenario_delete_tags():
     assert True
 
@@ -287,14 +266,24 @@ def valid_connect_delete_tags():
     assert True
 
 
-@when("The client deletes a set of tags")
-def delete_tags():
-    respholder.setResp('/delete_tags') #needs input yeah
+@when("The client deletes a set of tags on server number <server_number>")
+def delete_tags(server_number):
+    tags = mem.getTags(server_number)
+    postvalue = '['
+    i = 0
+    while i < len(tags):
+        postvalue = postvalue + '{ "id":' + str(tags[i]) + '}'
+        if i < len(tags) - 1:
+            postvalue=postvalue + ','
+        else:
+            postvalue = postvalue + ']'
+        i = i + 1
+    print(postvalue)
+    respholder.setResp('/delete_tags', post=postvalue)
 
 
 @then("The set of tags should be deleted")
 def check_deleted_tags():
-    print(resp)#here for testing purposes
     assert (resp.status_code == 200)
 
 
@@ -356,7 +345,7 @@ def check_routes():
     assert (resp.status_code == 200)
 
 
-@scenario('Connect.feature', 'Client deletes route with a given ID (POST /delete_route)')
+@scenario('Connect.feature', 'Client deletes route with a given ID (POST /delete_route)', example_converters=dict(routenumber = int))
 def test_scenario_delete_route():
     assert True
 
@@ -366,14 +355,14 @@ def valid_connect_delete_route():
     assert True
 
 
-@when('The client deletes a given route')
-def delete_route():
-    respholder.setResp('/delete_route') #needs input
+@when('The client deletes a given route <routenumber>')
+def delete_route(routenumber):
+    postvalue = '{ "id": ' + str(mem.getRoute(routenumber)) + '}'
+    respholder.setResp('/delete_route', post=postvalue)
 
 
 @then('The route should be deleted')
 def check_deleted_route():
-    print(resp)#here for testing purposes
     assert (resp.status_code == 200)
 
 
@@ -438,3 +427,24 @@ def activated_device():
 def check_activation():
     print(resp) #test etc etc
     assert (resp.status_code == 200)
+
+
+@scenario('Connect.feature', 'Client deletes a given server (POST /delete_server)',example_converters=dict(servernumber = int))
+def test_scenario_delete_server():
+    assert True
+
+
+@given("The client is connected to a valid server instance")
+def valid_connect_delete_server():
+    assert True
+
+
+@when('The client deletes a given server <servernumber>')
+def delete_server(servernumber):
+    postvalue = '{ "id": ' + str(mem.getServerId(servernumber)) + '}'
+    respholder.setResp('/delete_server', post=postvalue)
+
+
+@then('The server should be deleted')
+def check_delete_server():
+    assert (resp.status_code == 200) #while 500 is a possible error code, I'm not accepting it as a response because delete_server is the last thing run, and thus shouldn't return 500, cuz the route has been deleted by then

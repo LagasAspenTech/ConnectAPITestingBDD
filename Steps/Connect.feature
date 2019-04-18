@@ -41,11 +41,6 @@ Feature: Connect APIs
     |output_json_1|output_json_2|
     |{"key": "mqtt.io","id": 0,"name": "MQTT","url": "aspenmqtt.eastus.cloudapp.azure.com","port": 1883,"username": "aspenmqtt","password": "AspenTech*99","tls": false,"auth": true,"rootTopic": "test_stream/+","format": "JSON","dateFormat": "yyyy-MM-dd HH:mm:ss.fffffffff ZZZ GMT","autoDiscoverTags": true}|{"key": "sim.io","id": 2,"name": "sim","logdirectory": "./results/sim.io.001/","maxreadcount": 100000,"datafrequencysecs": 1}|
 
-  Scenario: Client deletes a given server (POST /delete_server)
-    Given The client is connected to a valid server instance
-    When The client deletes a given server
-    Then The server should be deleted
-
   Scenario: Client requests a list of devices (POST /test_connection)
     Given The client is connected to a valid server instance
     When The client requests a list of devices
@@ -80,10 +75,14 @@ Feature: Connect APIs
     |0      |sim.io |
     |1      |mqtt.io|
 
-  Scenario: Client deletes tags with corresponding IDs (POST /delete_tags)
+  Scenario Outline: Client deletes tags with corresponding IDs (POST /delete_tags)
     Given The client is connected to a valid server instance
-    When The client deletes a set of tags
+    When The client deletes a set of tags on server number <server_number>
     Then The set of tags should be deleted
+
+    Examples:
+    |server_number|
+    |0            |
 
   Scenario Outline: Client creates route to define input/output server/tags (POST /create_route)
     Given The client is connected to a valid server instance
@@ -103,10 +102,13 @@ Feature: Connect APIs
     |input      |0      |
     |output     |1      |
 
-  Scenario: Client deletes route with a given ID (POST /delete_route)
+  Scenario Outline: Client deletes route with a given ID (POST /delete_route)
     Given The client is connected to a valid server instance
-    When The client deletes a given route
+    When The client deletes a given route <routenumber>
     Then The route should be deleted
+    Examples:
+    |routenumber|
+    |0          |
 
   Scenario: Client creates a set of derived tags (POST /create_derived_tags)
     Given The client is connected to a valid server instance
@@ -122,3 +124,13 @@ Feature: Connect APIs
     Given The client is connected to a valid server instance
     When The client activates a device
     Then The device should be activated
+
+
+  Scenario Outline: Client deletes a given server (POST /delete_server)
+    Given The client is connected to a valid server instance
+    When The client deletes a given server <servernumber>
+    Then The server should be deleted
+    Examples:
+    |servernumber|
+    |0           |
+    |1           |
