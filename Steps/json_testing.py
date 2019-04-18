@@ -43,6 +43,7 @@ class memoryclass:
         self.routeIDs = []
         self.schemas = []
         self.tagIDs = {0:[]}
+        self.dertagIDs = {0:[]}
     def getServerId(self, i):
         return(self.serverIDs[i])
     def getServerIds(self):
@@ -64,6 +65,17 @@ class memoryclass:
         return(self.tagIDs[x])
     def getallTags(self):
         return(self.tagIDs)
+    def addDerTag(self, server, tag):
+        if server in self.dertagIDs:
+            self.dertagIDs[server].append(tag)
+        else:
+            self.dertagIDs[server] = [tag]
+    def getDerTag(self, x, y):
+        return(self.dertagIDs[x][y])
+    def getDerTags(self, x):
+        return(self.dertagIDs[x])
+    def getallDerTags(self):
+        return(self.dertagIDs)
     def addSchema(self, newschema):
         self.schemas.append(newschema)
     def getSchemas(self):
